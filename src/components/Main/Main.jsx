@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
 import Card from '../Card/Card'
 import style from './Main.module.css'
-import initialPosts from '../posts'
+import axios from "axios"
+// import initialPosts from '../posts'
 
 const initialFormData = {
   title: "",
@@ -10,10 +11,11 @@ const initialFormData = {
   tags: [],
   published: true
 }
+export const API_BASE_URI = 'http://localhost:3000/'
 
 export default function Main() {
 
-  const [posts, setPosts] = useState(initialPosts)
+  const [posts, setPosts] = useState([])
   const [formData, setFormData] = useState(initialFormData)
   const [isFirstRender, setIsFirstRender] = useState(true);
 
@@ -27,6 +29,26 @@ export default function Main() {
     )
     console.log(`pubblico: ${formData.published}`)
   }, [formData.published])
+
+  function fetchPosts() {
+    axios.get(`${API_BASE_URI}posts`, {
+      params: {
+        tags: '',
+        limit: 4
+      },
+    })
+      .then(res => {
+        console.log('posts res', res)
+        setPosts(res.data)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  }
+
+  useEffect(() => {
+    fetchPosts()
+  }, [])
 
 
 
