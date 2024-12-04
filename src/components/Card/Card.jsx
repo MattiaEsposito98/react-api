@@ -1,12 +1,13 @@
 import ImgNotFound from '../../assets/ImgNotFound.png'
 import style from './Card.module.css'
+import { API_BASE_URI } from '../Main/Main'
 
 export default function Card({ className = '', title = '', content = '', image, tags = [], published }) {
 
   return (
     published &&
     <div className={`${style.card} ${className}`}>
-      <img className={style.image} src={image || ImgNotFound} alt="" />
+      <img className={style.image} src={image ? API_BASE_URI + image : ImgNotFound} alt="" />
       <div className={style.card_body}>
         <h3 className={style.card_title}>{title || "Titolo"}</h3>
         <div>

@@ -31,25 +31,13 @@ export default function Main() {
   }, [formData.published])
 
   function fetchPosts() {
-    axios.get(`${API_BASE_URI}posts`, {
-      params: {
-        tags: '',
-        limit: 4
-      },
-    })
-      .then(res => {
-        console.log('posts res', res)
-        setPosts(res.data)
-      })
+    axios.get(`${API_BASE_URI}posts`)
+      .then((res) => setPosts(res.data.results))
       .catch(err => {
-        console.error(err)
+        console.log(err)
       })
   }
-
-  useEffect(() => {
-    fetchPosts()
-  }, [])
-
+  useEffect(fetchPosts, [])
 
 
   function handleFormData(e) {
@@ -73,15 +61,30 @@ export default function Main() {
 
     }
 
-    setPosts([...posts, newBlog])
-    setFormData(initialFormData)
-    console.log("aggiungo un nuovo post")
+    axios.post(`${API_BASE_URI}posts`, newBlog)
+      .then(res => {
+        setPosts([...posts, res.data])
+        setFormData(initialFormData)
+      }).catch(err => {
+        alert(err.response.data.message)
+      })
+    console.log("Dati da inviare:", newBlog);
   }
 
 
-  function deleteBlog(blogtext) {
-    setPosts(posts.filter(post => post !== blogtext))
+  function deleteBlog(id) {
+    console.log(id)
+    axios.delete(`${API_BASE_URI}posts/${id}`)
+      .then(() => {
+        setPosts(posts.filter((post) => post.id !== id));
+        fetchPosts()
+      })
+      .catch(err => {
+        console.error(err)
+        alert('Non è stato possibile eliminare la pizza selezionata.')
+      })
   }
+
 
   return (
     <main>
@@ -96,7 +99,7 @@ export default function Main() {
             <input id="published" type="checkbox" name="published" checked={formData.published} onChange={handleFormData} />
           </div>
 
-          <button type="submit"> Aggiungi</button>
+          <button type="submit" > Aggiungi</button>
         </form>
         <div className={style.listItem}>
           <h3>Lista dei blog  </h3>
@@ -104,7 +107,7 @@ export default function Main() {
             {posts.filter(post => post.published === true).map(post => (
 
               <li key={post.id}> {post.title}
-                <button onClick={() => deleteBlog(post)}>Elimina</button>
+                <button onClick={() => deleteBlog(post.id)}>Elimina</button>
               </li>
             ))}
           </ul>
