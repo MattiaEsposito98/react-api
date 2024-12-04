@@ -1,0 +1,49 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+button {
+  border: none;
+  background-color: transparent;
+}
+
+a {
+  color: currentColor;
+  text-decoration: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+body {
+  background-color: #efefef;
+}
+
+.container {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.row>* {
+  padding: 0 0.5rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.col-12 {
+  width: 100%;
+}
+
+.col-6 {
+  width: 50%;
+}
